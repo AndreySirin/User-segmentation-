@@ -1,0 +1,50 @@
+version: '3'
+
+silent: true
+
+vars:
+  TOOLS_DIR:
+    sh: echo "`pwd`/bin/tools"
+
+  DEV_TOOLS: |
+    github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.1.5
+
+tasks:
+  default:
+    cmds:
+      - task: tidy
+      - task: fmt
+      - task: lint
+      - task: test
+
+  tidy:
+    - echo "- Tidy..."
+    - go mod tidy
+
+  fmt:
+    desc: runs golangci fmt
+    cmds:
+      - echo "- Format..."
+      - |
+        "{{.TOOLS_DIR}}"/golangci-lint fmt -v ./...
+
+  lint:
+    desc: runs golangci lint
+    cmds:
+      - echo "- Lint..."
+      - |
+        "{{.TOOLS_DIR}}"/golangci-lint run -v ./...
+
+  test:
+    - echo "- Test..."
+    - go test --race ./...
+
+  dev-tools:install:
+    - echo "- Dev Tools Install..."
+    - |
+      export GOBIN="{{.TOOLS_DIR}}"
+      {{range $i, $tool := .DEV_TOOLS | trim | splitLines -}}
+        go install {{$tool}}
+      {{end}}
+    - ls -l "{{.TOOLS_DIR}}"
+ 

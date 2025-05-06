@@ -1,0 +1,34 @@
+  services:
+
+    app:
+      build:
+        context: ../..
+        dockerfile: deploy/local/Dockerfile
+      ports:
+        - "8080:8080"
+      depends_on:
+        postgres:
+          condition: service_healthy
+      networks:
+          - my-network
+
+    postgres:
+      image: postgres:latest
+      container_name: ps
+      environment:
+        POSTGRES_DB: database
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: secret
+      ports:
+        - "5432:5432"
+      volumes:
+        - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      networks:
+        - my-network
+      healthcheck:
+        test: [ "CMD", "pg_isready", "-U", "admin", "-d", "database" ]
+        interval: 5s
+        retries: 5
+  networks:
+    my-network:
+      driver: bridge

@@ -1,0 +1,30 @@
+CREATE TABLE users (
+    id_user SERIAL PRIMARY KEY,
+    full_name VARCHAR(255) NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    date_of_birth TIMESTAMP NOT NULL,
+    create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    delete_at TIMESTAMP
+);
+
+CREATE TABLE segments (
+    id_segment SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description VARCHAR NOT NULL ,
+    auto_user_prc SMALLINT NOT NULL,
+    create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    delete_at TIMESTAMP
+);
+
+CREATE TABLE subscriptions (
+    PRIMARY KEY (id_user, id_segment),
+    id_user INTEGER NOT NULL REFERENCES users(id_user) ON DELETE CASCADE,
+    id_segment INTEGER NOT NULL REFERENCES segments(id_segment) ON DELETE CASCADE,
+    ttl TIMESTAMP,
+    auto_add BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    delete_at TIMESTAMP
+);
