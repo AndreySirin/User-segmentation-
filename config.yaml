@@ -1,0 +1,15 @@
+DatabaseConfig:
+  DbName: "postgres"
+  User: "postgres"
+  Password: "secret"
+  Address: "postgres:5432"
+
+ServerConfig:
+  Port: ":8080"
+  ShutdownTimeout: 3s
+  Module : "server"
+
+loggerConfig:
+  debug: true
+  error: false
+
