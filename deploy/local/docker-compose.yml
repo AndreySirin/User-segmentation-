@@ -1,0 +1,31 @@
+  services:
+
+    app:
+      build:
+        context: ../..
+        dockerfile: deploy/local/Dockerfile
+      ports:
+        - "8080:8080"
+      depends_on:
+        postgres:
+          condition: service_healthy
+
+    postgres:
+      image: postgres:17.4-alpine3.21
+      environment:
+        POSTGRES_DB: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: secret
+        PGDATA: /var/lib/postgresql/data
+      volumes:
+        - postgresql-data:/var/lib/postgresql
+        - ./init.sql:/docker-entrypoint-initdb.d/init_db.sql
+      ports:
+        - "127.0.0.1:5432:5432"
+      healthcheck:
+        test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "postgres" ]
+        interval: 5s
+        retries: 5
+
+  volumes:
+    postgresql-data:

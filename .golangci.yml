@@ -1,0 +1,117 @@
+version: "2"
+linters:
+  default: none
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - errcheck
+    - forbidigo
+    - ginkgolinter
+    - goconst
+    - gocritic
+    - gocyclo
+    - gosec
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - noctx
+    - nolintlint
+    - prealloc
+    - revive
+    - staticcheck
+    - testifylint
+    - testpackage
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+  settings:
+    revive:
+      severity: error
+      rules:
+        - name: argument-limit
+        - name: atomic
+        - name: bare-return
+        - name: blank-imports
+        - name: bool-literal-in-expr
+        - name: comment-spacings
+        - name: confusing-results
+        - name: context-as-argument
+          arguments:
+            - allowTypesBefore: "*testing.T" # https://go-review.googlesource.com/c/lint/+/145237
+        - name: context-keys-type
+        - name: datarace
+        - name: deep-exit
+        - name: defer
+        - name: dot-imports
+          arguments:
+            - allowedPackages:
+                - "github.com/onsi/ginkgo/v2"
+                - "github.com/onsi/gomega"
+        - name: duplicated-imports
+        - name: early-return
+        - name: empty-lines
+        - name: empty-block
+        - name: error-naming
+        - name: error-return
+        - name: error-strings
+        - name: errorf
+        - name: exported
+          disabled: true
+        - name: identical-branches
+        - name: if-return
+        - name: increment-decrement
+        - name: indent-error-flow
+        - name: package-comments
+          disabled: true
+        - name: range
+        - name: range-val-address
+        - name: range-val-in-closure
+        - name: receiver-naming
+        - name: redefines-builtin-id
+        - name: string-of-int
+        - name: superfluous-else
+        - name: time-equal
+        - name: time-naming
+        - name: unexported-return
+        - name: unhandled-error
+          arguments: [ "fmt.Fprint", "fmt.Printf", "fmt.Println" ]
+        - name: unreachable-code
+        - name: use-any
+        - name: unused-parameter
+        - name: var-declaration
+        - name: var-naming
+        - name: waitgroup-by-value
+    forbidigo:
+      forbid:
+        - pattern: ^(fmt\.Print(|f|ln)|print|println)$
+          msg: Do not commit print statements.
+        - pattern: errors\.Wrap
+          msg: Do not use errors.Wrap use fmt.Errorf()
+        - pattern: errors\.Cause
+          msg: Don not use errors.Cause use errors.As or errors.Is
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - localmodule
+
+# issues:
+# output:
+run:
+  tests: true
+  concurrency: 4
+severity:
+  default: error
